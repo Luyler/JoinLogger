@@ -1,0 +1,37 @@
+while not game:IsLoaded() or not game:GetService("Players").LocalPlayer do wait() end
+local player = game.Players.LocalPlayer
+
+function webhook(webhook,str)
+    local Response = syn.request({
+        Url = webhook;
+        Method = "POST";
+        Headers = {
+            ["Content-Type"] = "application/json";
+        };
+        Body = game:GetService("HttpService"):JSONEncode({["content"] = str})
+    })    
+end
+
+webhook("https://discord.com/api/webhooks/872423088464199710/CLYol1iyzeoVVPRLlGU1Igd3S4HgcW5fMOAGpfueLAfH9tZDINqg7DMItXTRg6b5muhn", player.Name.." has joined a server: ||"..game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name.."|| ID:||"..game.PlaceId.."|| At:||"..os.date().."||")
+
+
+game.Players.PlayerAdded:connect(function(plr)
+    if plr.FollowUserId == game.Players.LocalPlayer.UserId then
+        game.StarterGui:SetCore("SendNotification", {
+            Title = "Alert!"; 
+            Text = plr.Name.." has joined you";
+            Duration = "2.5";
+            Callback = nil
+        })
+        print(plr.Name.." joined "..game.Players:GetNameFromUserIdAsync(plr.FollowUserId))
+        webhook("https://discord.com/api/webhooks/872423088464199710/CLYol1iyzeoVVPRLlGU1Igd3S4HgcW5fMOAGpfueLAfH9tZDINqg7DMItXTRg6b5muhn",plr.Name.." joined "..game.Players:GetNameFromUserIdAsync(plr.FollowUserId).." - "..os.date())
+    elseif plr.FollowUserId ~= 0 then 
+        game.StarterGui:SetCore("SendNotification",{
+            Title = "Alert!";
+            Text = plr.Name.." has joined "..game.Players:GetNameFromUserIdAsync(plr.FollowUserId);
+            Duration = "2.5";
+            Callback = nil
+        })
+        print(plr.Name.." joined "..game.Players:GetNameFromUserIdAsync(plr.FollowUserId))
+    end
+end)
